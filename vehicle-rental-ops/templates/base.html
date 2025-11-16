@@ -16,10 +16,10 @@
             --theme-bg: #0a0e27;
             --theme-card: #151932;
             --theme-border: #2a3f5f;
-            --theme-accent: #00d4ff;
-            --theme-success: #00ff88;
-            --theme-danger: #ff3366;
-            --theme-warning: #ffaa00;
+            --theme-accent: #6b7c93;
+            --theme-success: #6b8e7f;
+            --theme-danger: #c55d6f;
+            --theme-warning: #b8936f;
         }
         
         body {
@@ -33,7 +33,7 @@
             background: rgba(10, 14, 39, 0.95) !important;
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--theme-border);
-            box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .navbar-brand {
@@ -51,12 +51,12 @@
         
         .card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(0, 212, 255, 0.15);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
         }
         
         .kpi-card {
-            border-left: 3px solid var(--theme-accent);
-            background: linear-gradient(135deg, var(--theme-card) 0%, rgba(0, 212, 255, 0.05) 100%);
+            border-left: 3px solid var(--theme-border);
+            background: linear-gradient(135deg, var(--theme-card) 0%, rgba(42, 63, 95, 0.1) 100%);
         }
 
         .kpi-card h2 {
@@ -86,8 +86,8 @@
         }
         
         .btn-primary:hover {
-            background: #00a8cc;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+            background: #5a6a7d;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
         
         .alert-pulse {
@@ -106,7 +106,7 @@
         
         /* Data Grid Styling */
         .data-grid {
-            background: rgba(0, 212, 255, 0.02);
+            background: rgba(42, 63, 95, 0.1);
             border: 1px solid var(--theme-border);
             border-radius: 8px;
             padding: 1rem;
@@ -114,7 +114,7 @@
         
         /* Glow Effects */
         .glow-accent {
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
         
         .metric-value {

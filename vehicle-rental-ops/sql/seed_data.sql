@@ -107,72 +107,72 @@ INSERT INTO salespersons (name, email, store_id, hire_date, total_sales) VALUES
 -- Transactions (mix of completed, active, and suspicious patterns)
 INSERT INTO transactions (customer_id, vehicle_id, salesperson_id, store_id, rental_date, return_date, quantity, total_amount, status) VALUES
 -- Completed normal transactions
-(1, 1, 1, 1, '2024-10-01', '2024-10-05', 1, 183.96, 'completed'),
-(2, 4, 2, 2, '2024-10-10', '2024-10-15', 1, 399.95, 'completed'),
-(3, 10, 5, 5, '2024-10-20', '2024-10-25', 1, 449.95, 'completed'),
-(4, 7, 7, 7, '2024-10-15', '2024-10-20', 2, 1599.90, 'completed'),
-(5, 2, 4, 4, '2024-11-01', '2024-11-05', 1, 239.95, 'completed'),
+(1, 1, 1, 1, CURRENT_DATE - INTERVAL '46 days', CURRENT_DATE - INTERVAL '42 days', 1, 183.96, 'completed'),
+(2, 4, 2, 2, CURRENT_DATE - INTERVAL '37 days', CURRENT_DATE - INTERVAL '32 days', 1, 399.95, 'completed'),
+(3, 10, 5, 5, CURRENT_DATE - INTERVAL '27 days', CURRENT_DATE - INTERVAL '22 days', 1, 449.95, 'completed'),
+(4, 7, 7, 7, CURRENT_DATE - INTERVAL '32 days', CURRENT_DATE - INTERVAL '27 days', 2, 1599.90, 'completed'),
+(5, 2, 4, 4, CURRENT_DATE - INTERVAL '15 days', CURRENT_DATE - INTERVAL '11 days', 1, 239.95, 'completed'),
 -- Active rentals
-(1, 13, 1, 1, '2024-11-14', NULL, 1, 299.97, 'active'),
-(3, 5, 5, 5, '2024-11-15', NULL, 1, 248.97, 'active'),
-(6, 8, 8, 8, '2024-11-13', NULL, 1, 509.97, 'active'),
-(4, 14, 7, 7, '2024-11-12', NULL, 2, 719.92, 'active'),
+(1, 13, 1, 1, CURRENT_DATE - INTERVAL '2 days', NULL, 1, 299.97, 'active'),
+(3, 5, 5, 5, CURRENT_DATE - INTERVAL '1 day', NULL, 1, 248.97, 'active'),
+(6, 8, 8, 8, CURRENT_DATE - INTERVAL '3 days', NULL, 1, 509.97, 'active'),
+(4, 14, 7, 7, CURRENT_DATE - INTERVAL '4 days', NULL, 2, 719.92, 'active'),
 -- Suspicious transactions (fraud patterns)
-(7, 7, 3, 3, '2024-11-10', '2024-11-11', 1, 999.99, 'completed'),  -- Way overcharged!
-(8, 1, 9, 9, '2024-11-15', NULL, 5, 229.95, 'active'),  -- 5 economy cars at once?
-(7, 8, 3, 3, '2024-11-11', '2024-11-12', 1, 899.99, 'completed'),  -- Overcharged again!
+(7, 7, 3, 3, CURRENT_DATE - INTERVAL '6 days', CURRENT_DATE - INTERVAL '5 days', 1, 999.99, 'completed'),  -- Way overcharged!
+(8, 1, 9, 9, CURRENT_DATE - INTERVAL '1 day', NULL, 5, 229.95, 'active'),  -- 5 economy cars at once?
+(7, 8, 3, 3, CURRENT_DATE - INTERVAL '5 days', CURRENT_DATE - INTERVAL '4 days', 1, 899.99, 'completed'),  -- Overcharged again!
 -- High-value business transactions
-(9, 7, 1, 1, '2024-11-01', '2024-11-10', 1, 1599.90, 'completed'),
-(10, 8, 1, 1, '2024-11-05', '2024-11-15', 3, 5099.70, 'completed'),
+(9, 7, 1, 1, CURRENT_DATE - INTERVAL '15 days', CURRENT_DATE - INTERVAL '6 days', 1, 1599.90, 'completed'),
+(10, 8, 1, 1, CURRENT_DATE - INTERVAL '11 days', CURRENT_DATE - INTERVAL '1 day', 3, 5099.70, 'completed'),
 -- Cancelled transactions
-(2, 6, 2, 2, '2024-11-10', NULL, 1, 317.98, 'cancelled'),
-(5, 11, 4, 4, '2024-11-08', NULL, 1, 92.99, 'cancelled');
+(2, 6, 2, 2, CURRENT_DATE - INTERVAL '6 days', NULL, 1, 317.98, 'cancelled'),
+(5, 11, 4, 4, CURRENT_DATE - INTERVAL '8 days', NULL, 1, 92.99, 'cancelled');
 
 -- Performance Metrics (showing trends and patterns)
 INSERT INTO performance_metrics (metric_date, store_id, revenue, utilization_rate, avg_rental_duration, maintenance_costs, customer_satisfaction_score, demand_forecast_next_7d) VALUES
 -- Store 1 - Manhattan (high performance)
-('2024-11-10', 1, 3500.00, 0.85, 4.2, 200.00, 4.5, 25),
-('2024-11-11', 1, 3200.00, 0.82, 4.0, 150.00, 4.6, 24),
-('2024-11-12', 1, 3800.00, 0.88, 4.5, 180.00, 4.4, 26),
-('2024-11-13', 1, 4100.00, 0.91, 4.8, 220.00, 4.3, 28),
-('2024-11-14', 1, 4500.00, 0.93, 5.0, 250.00, 4.2, 30),  -- Demand surge!
-('2024-11-15', 1, 4200.00, 0.90, 4.6, 200.00, 4.4, 27),
+(CURRENT_DATE - INTERVAL '6 days', 1, 3500.00, 0.85, 4.2, 200.00, 4.5, 25),
+(CURRENT_DATE - INTERVAL '5 days', 1, 3200.00, 0.82, 4.0, 150.00, 4.6, 24),
+(CURRENT_DATE - INTERVAL '4 days', 1, 3800.00, 0.88, 4.5, 180.00, 4.4, 26),
+(CURRENT_DATE - INTERVAL '3 days', 1, 4100.00, 0.91, 4.8, 220.00, 4.3, 28),
+(CURRENT_DATE - INTERVAL '2 days', 1, 4500.00, 0.93, 5.0, 250.00, 4.2, 30),  -- Demand surge!
+(CURRENT_DATE - INTERVAL '1 day', 1, 4200.00, 0.90, 4.6, 200.00, 4.4, 27),
 -- Store 3 - Miami (maintenance issues)
-('2024-11-10', 3, 2100.00, 0.65, 3.5, 800.00, 3.8, 15),  -- High maintenance costs!
-('2024-11-11', 3, 1900.00, 0.60, 3.2, 850.00, 3.6, 14),
-('2024-11-12', 3, 1800.00, 0.58, 3.0, 900.00, 3.5, 13),
-('2024-11-13', 3, 2000.00, 0.62, 3.3, 750.00, 3.7, 15),
-('2024-11-14', 3, 2200.00, 0.64, 3.6, 700.00, 3.9, 16),
-('2024-11-15', 3, 2300.00, 0.66, 3.8, 650.00, 4.0, 17),
+(CURRENT_DATE - INTERVAL '6 days', 3, 2100.00, 0.65, 3.5, 800.00, 3.8, 15),  -- High maintenance costs!
+(CURRENT_DATE - INTERVAL '5 days', 3, 1900.00, 0.60, 3.2, 850.00, 3.6, 14),
+(CURRENT_DATE - INTERVAL '4 days', 3, 1800.00, 0.58, 3.0, 900.00, 3.5, 13),
+(CURRENT_DATE - INTERVAL '3 days', 3, 2000.00, 0.62, 3.3, 750.00, 3.7, 15),
+(CURRENT_DATE - INTERVAL '2 days', 3, 2200.00, 0.64, 3.6, 700.00, 3.9, 16),
+(CURRENT_DATE - INTERVAL '1 day', 3, 2300.00, 0.66, 3.8, 650.00, 4.0, 17),
 -- Store 7 - LAX (normal operations)
-('2024-11-10', 7, 2800.00, 0.75, 3.8, 300.00, 4.2, 20),
-('2024-11-11', 7, 2900.00, 0.76, 3.9, 310.00, 4.1, 21),
-('2024-11-12', 7, 2750.00, 0.73, 3.7, 290.00, 4.3, 19),
-('2024-11-13', 7, 3000.00, 0.78, 4.0, 320.00, 4.2, 22),
-('2024-11-14', 7, 3100.00, 0.79, 4.1, 330.00, 4.1, 23),
-('2024-11-15', 7, 2950.00, 0.77, 3.9, 305.00, 4.2, 21);
+(CURRENT_DATE - INTERVAL '6 days', 7, 2800.00, 0.75, 3.8, 300.00, 4.2, 20),
+(CURRENT_DATE - INTERVAL '5 days', 7, 2900.00, 0.76, 3.9, 310.00, 4.1, 21),
+(CURRENT_DATE - INTERVAL '4 days', 7, 2750.00, 0.73, 3.7, 290.00, 4.3, 19),
+(CURRENT_DATE - INTERVAL '3 days', 7, 3000.00, 0.78, 4.0, 320.00, 4.2, 22),
+(CURRENT_DATE - INTERVAL '2 days', 7, 3100.00, 0.79, 4.1, 330.00, 4.1, 23),
+(CURRENT_DATE - INTERVAL '1 day', 7, 2950.00, 0.77, 3.9, 305.00, 4.2, 21);
 
 -- Operational Events (detected anomalies and issues)
 INSERT INTO operational_events (event_type, entity_type, entity_id, severity, detected_at, details, resolved) VALUES
 -- Fraud detection
-('fraud_risk', 'customer', 7, 'high', '2024-11-11 10:30:00', 
+('fraud_risk', 'customer', 7, 'high', CURRENT_TIMESTAMP - INTERVAL '5 days 13 hours 30 minutes',
  '{"reason": "Multiple high-value rentals in short period", "amount": 1899.98, "risk_score": 0.92}', false),
-('fraud_risk', 'transaction', 11, 'critical', '2024-11-15 14:45:00',
+('fraud_risk', 'transaction', 11, 'critical', CURRENT_TIMESTAMP - INTERVAL '1 day 9 hours 15 minutes',
  '{"reason": "Unusual quantity for customer type", "quantity": 5, "normal_range": "1-2"}', false),
 -- Maintenance alerts
-('maintenance', 'vehicle', 9, 'high', '2024-11-10 08:00:00',
+('maintenance', 'vehicle', 9, 'high', CURRENT_TIMESTAMP - INTERVAL '6 days 16 hours',
  '{"reason": "No rental in 45 days", "last_rental": "2024-10-01", "recommended_action": "inspection"}', false),
-('maintenance', 'vehicle', 3, 'medium', '2024-11-12 09:15:00',
+('maintenance', 'vehicle', 3, 'medium', CURRENT_TIMESTAMP - INTERVAL '4 days 14 hours 45 minutes',
  '{"reason": "High mileage threshold reached", "current_miles": 35000, "service_due": 36000}', true),
 -- Demand surge
-('demand_surge', 'store', 1, 'high', '2024-11-14 16:00:00',
+('demand_surge', 'store', 1, 'high', CURRENT_TIMESTAMP - INTERVAL '2 days 8 hours',
  '{"utilization": 0.93, "available_vehicles": 2, "incoming_demand": 30}', false),
-('demand_surge', 'vehicle', 13, 'critical', '2024-11-16 10:00:00',
+('demand_surge', 'vehicle', 13, 'critical', CURRENT_TIMESTAMP - INTERVAL '14 hours',
  '{"category": "Electric", "available": 1, "demand": 15, "recommendation": "transfer_inventory"}', false),
 -- Anomalies
-('anomaly', 'transaction', 10, 'high', '2024-11-10 11:20:00',
+('anomaly', 'transaction', 10, 'high', CURRENT_TIMESTAMP - INTERVAL '6 days 12 hours 40 minutes',
  '{"type": "pricing_anomaly", "expected": 159.99, "actual": 999.99, "variance": 525}', false),
-('anomaly', 'store', 3, 'medium', '2024-11-13 13:30:00',
+('anomaly', 'store', 3, 'medium', CURRENT_TIMESTAMP - INTERVAL '3 days 10 hours 30 minutes',
  '{"type": "maintenance_cost_spike", "normal_range": "200-400", "actual": 900}', false);
 
 -- Update calculated fields

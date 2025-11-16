@@ -78,8 +78,8 @@
                                 <i class="bi bi-speedometer"></i> Fleet Utilization
                             </h6>
                             <div class="metric-value">{{ utilization or 0 }}%</div>
-                            <div class="progress mt-2" style="height: 4px; background: rgba(0,212,255,0.1);">
-                                <div class="progress-bar" style="width: {{ utilization or 0 }}%; background: linear-gradient(90deg, var(--theme-accent), var(--theme-success));"></div>
+                            <div class="progress mt-2" style="height: 4px; background: rgba(42, 63, 95, 0.3);">
+                                <div class="progress-bar bg-secondary" style="width: {{ utilization or 0 }}%;"></div>
                             </div>
                         </div>
                         <i class="bi bi-pie-chart text-primary fs-4"></i>
@@ -236,16 +236,16 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 data: [utilization, 100-utilization, 10, 15],
                 backgroundColor: [
-                    'rgba(0, 212, 255, 0.6)',
-                    'rgba(0, 255, 136, 0.6)',
-                    'rgba(255, 170, 0, 0.6)',
-                    'rgba(255, 51, 102, 0.6)'
+                    'rgba(107, 124, 147, 0.6)',
+                    'rgba(107, 142, 127, 0.6)',
+                    'rgba(184, 147, 111, 0.6)',
+                    'rgba(197, 93, 111, 0.6)'
                 ],
                 borderColor: [
-                    'rgba(0, 212, 255, 1)',
-                    'rgba(0, 255, 136, 1)',
-                    'rgba(255, 170, 0, 1)',
-                    'rgba(255, 51, 102, 1)'
+                    'rgba(107, 124, 147, 1)',
+                    'rgba(107, 142, 127, 1)',
+                    'rgba(184, 147, 111, 1)',
+                    'rgba(197, 93, 111, 1)'
                 ],
                 borderWidth: 2
             }]
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 tooltip: {
                     backgroundColor: 'rgba(10, 14, 39, 0.9)',
-                    borderColor: '#00d4ff',
+                    borderColor: '#6b7c93',
                     borderWidth: 1
                 }
             },
