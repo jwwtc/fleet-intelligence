@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Threat Monitor Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h2 mb-1">
+                <i class="bi bi-shield-exclamation text-danger"></i> THREAT MONITOR
+            </h1>
+            <p class="text-muted mb-0">Operational Events | Security Alerts | Real-time Monitoring</p>
+            <hr style="border-color: var(--theme-accent); opacity: 0.3;">
+        </div>
+    </div>
+
+    <!-- Event Statistics -->
+    <div class="row mb-4 g-3">
+        <div class="col-md-3">
+            <div class="card kpi-card border-danger">
+                <div class="card-body text-center">
+                    <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
+                    <h3 class="mt-2 text-info">
+                        {% set critical = events|selectattr('severity', 'equalto', 'critical')|list|length %}
+                        {{ critical }}
+                    </h3>
+                    <p class="text-muted mb-0">Critical Events</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card border-warning">
+                <div class="card-body text-center">
+                    <i class="bi bi-exclamation-circle fs-1 text-warning"></i>
+                    <h3 class="mt-2 text-info">
+                        {% set high = events|selectattr('severity', 'equalto', 'high')|list|length %}
+                        {{ high }}
+                    </h3>
+                    <p class="text-muted mb-0">High Priority</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                    <h3 class="mt-2 text-info">
+                        {% set resolved = events|selectattr('resolved', 'equalto', true)|list|length %}
+                        {{ resolved }}
+                    </h3>
+                    <p class="text-muted mb-0">Resolved</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-activity fs-1 text-primary"></i>
+                    <h3 class="mt-2 text-info">{{ events|length }}</h3>
+                    <p class="text-muted mb-0">Total Events</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operational Events Panel -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger bg-opacity-10 border-danger">
+                    <h5 class="mb-0 text-danger">
+                        <i class="bi bi-broadcast"></i> OPERATIONAL EVENTS LOG
+                        <span class="badge bg-danger float-end alert-pulse">LIVE MONITORING</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if events %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>EVENT TYPE</th>
+                                        <th>ENTITY</th>
+                                        <th>SEVERITY</th>
+                                        <th>DETAILS</th>
+                                        <th>TIMESTAMP</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-dark">
+                                                <i class="bi bi-lightning-charge"></i>
+                                                {{ event.event_type|upper|replace('_', ' ') }}
+                                            </span>
+                                        </td>
+                                        <td class="text-info">
+                                            <i class="bi {% if event.entity_type == 'vehicle' %}bi-truck{% elif event.entity_type == 'customer' %}bi-person{% elif event.entity_type == 'rental' %}bi-file-text{% else %}bi-box{% endif %}"></i>
+                                            {{ event.entity_type|upper }}
+                                        </td>
+                                        <td>
+                                            {% if event.severity == 'critical' %}
+                                                <span class="badge bg-danger severity-critical">
+                                                    <i class="bi bi-exclamation-triangle-fill"></i> CRITICAL
+                                                </span>
+                                            {% elif event.severity == 'high' %}
+                                                <span class="badge bg-warning severity-high">
+                                                    <i class="bi bi-exclamation-circle-fill"></i> HIGH
+                                                </span>
+                                            {% elif event.severity == 'medium' %}
+                                                <span class="badge bg-info severity-medium">
+                                                    <i class="bi bi-info-circle-fill"></i> MEDIUM
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-success severity-low">
+                                                    <i class="bi bi-check-circle-fill"></i> LOW
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="small">
+                                            {% if event.details %}
+                                                {% if event.details is mapping %}
+                                                    {% if event.details.reason %}
+                                                        {{ event.details.reason[:60] }}{% if event.details.reason|length > 60 %}...{% endif %}
+                                                    {% else %}
+                                                        {{ event.details|string|truncate(60) }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ event.details|string|truncate(60) }}
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="text-muted">No details available</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="small text-muted">
+                                            <i class="bi bi-clock"></i>
+                                            {% if event.detected_at %}
+                                                {{ event.detected_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                            {% else %}
+                                                Unknown
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if event.resolved %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-lg"></i> RESOLVED
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning alert-pulse">
+                                                    <i class="bi bi-hourglass-split"></i> ACTIVE
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-5 text-center text-muted">
+                            <i class="bi bi-shield-check fs-1 text-success"></i>
+                            <p class="mt-2">No operational events detected</p>
+                            <small class="text-success">All systems nominal</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Filter Panel -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="text-uppercase small text-muted mb-3">
+                        <i class="bi bi-filter"></i> EVENT FILTERING
+                    </h6>
+                    <div class="btn-group w-100" role="group">
+                        <button class="btn btn-outline-danger">
+                            <i class="bi bi-exclamation-triangle"></i> CRITICAL
+                        </button>
+                        <button class="btn btn-outline-warning">
+                            <i class="bi bi-exclamation-circle"></i> HIGH
+                        </button>
+                        <button class="btn btn-outline-info">
+                            <i class="bi bi-info-circle"></i> MEDIUM
+                        </button>
+                        <button class="btn btn-outline-success">
+                            <i class="bi bi-check-circle"></i> LOW
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-clockwise"></i> REFRESH
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

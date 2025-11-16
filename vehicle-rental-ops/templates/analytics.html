@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Intelligence Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h2 mb-1">
+                <i class="bi bi-graph-up-arrow text-info"></i> INTELLIGENCE ANALYTICS
+            </h1>
+            <p class="text-muted mb-0">Predictive Analysis | Pattern Recognition | Strategic Optimization</p>
+            <hr style="border-color: var(--theme-accent); opacity: 0.3;">
+        </div>
+    </div>
+
+    <!-- Fraud Detection Panel -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card glow-accent">
+                <div class="card-header bg-danger bg-opacity-10 border-danger">
+                    <h5 class="mb-0 text-danger">
+                        <i class="bi bi-shield-exclamation"></i> FRAUD DETECTION MATRIX
+                        <span class="badge bg-danger float-end">{{ suspicious_customers|length }} SUSPECTS</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if suspicious_customers %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>CUSTOMER ID</th>
+                                        <th>NAME</th>
+                                        <th>EMAIL</th>
+                                        <th>PHONE</th>
+                                        <th>RISK INDICATORS</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for customer in suspicious_customers %}
+                                    <tr>
+                                        <td class="text-info fw-bold">{{ customer.customer_id }}</td>
+                                        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                        <td class="small"><i class="bi bi-envelope"></i> {{ customer.email }}</td>
+                                        <td class="small"><i class="bi bi-telephone"></i> {{ customer.phone }}</td>
+                                        <td>
+                                            <span class="badge bg-warning bg-opacity-25 text-warning">
+                                                High Risk Pattern
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-flag-fill"></i> FLAG
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-shield-check fs-1 text-success"></i>
+                            <p>No suspicious activity detected</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Optimization & Maintenance Grid -->
+    <div class="row g-3">
+        <!-- Revenue Optimization -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-success bg-opacity-10 border-success">
+                    <h5 class="mb-0 text-success">
+                        <i class="bi bi-currency-dollar"></i> REVENUE OPTIMIZATION
+                        <span class="badge bg-success float-end">{{ revenue_opportunities|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if revenue_opportunities %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>OPPORTUNITY</th>
+                                        <th>VEHICLE</th>
+                                        <th>CURRENT PRICE</th>
+                                        <th>SUGGESTED PRICE</th>
+                                        <th>POTENTIAL GAIN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for opp in revenue_opportunities %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-success bg-opacity-25 text-success">
+                                                {{ opp.opportunity_type or 'OPTIMIZE' }}
+                                            </span>
+                                        </td>
+                                        <td class="text-info">{{ opp.model_name }}</td>
+                                        <td>${{ "%.2f"|format(opp.current_price) }}</td>
+                                        <td class="text-success fw-bold">${{ "%.2f"|format(opp.suggested_price) }}</td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                +${{ "%.0f"|format(opp.potential_revenue) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-graph-up-arrow fs-1"></i>
+                            <p>Analyzing market patterns...</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Maintenance Priorities -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-warning bg-opacity-10 border-warning">
+                    <h5 class="mb-0 text-warning">
+                        <i class="bi bi-tools"></i> MAINTENANCE PRIORITIES
+                        <span class="badge bg-warning float-end">{{ maintenance|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if maintenance %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>VEHICLE</th>
+                                        <th>VIN</th>
+                                        <th>ISSUE</th>
+                                        <th>PRIORITY</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for vehicle in maintenance %}
+                                    <tr>
+                                        <td class="text-info">
+                                            <i class="bi bi-truck"></i> {{ vehicle.model_name }}
+                                        </td>
+                                        <td class="small text-muted">{{ vehicle.vin }}</td>
+                                        <td class="small">Scheduled maintenance required</td>
+                                        <td>
+                                            <span class="badge bg-warning bg-opacity-25 text-warning">
+                                                HIGH
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-warning">
+                                                <i class="bi bi-calendar-check"></i> SCHEDULE
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-check-circle fs-1 text-success"></i>
+                            <p>All fleet assets operational</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

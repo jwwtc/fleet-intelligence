@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Mission Control Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h2 mb-1">
+                <i class="bi bi-diagram-3-fill text-info"></i> OPERATIONAL COMMAND CENTER
+            </h1>
+            <p class="text-muted mb-0">Real-time Intelligence | Threat Detection | Performance Analytics</p>
+            <hr style="border-color: var(--theme-accent); opacity: 0.3;">
+        </div>
+    </div>
+
+    <!-- KPI Metrics Grid -->
+    <div class="row mb-4 g-3">
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase text-muted small">
+                                <i class="bi bi-people-fill"></i> Active Entities
+                            </h6>
+                            <div class="metric-value">{{ kpis.total_customers or 0 }}</div>
+                            <small class="text-success">
+                                <i class="bi bi-arrow-up"></i> LAST 30 DAYS
+                            </small>
+                        </div>
+                        <i class="bi bi-activity text-info fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase text-muted small">
+                                <i class="bi bi-truck"></i> Active Operations
+                            </h6>
+                            <div class="metric-value">{{ kpis.active_rentals or 0 }}</div>
+                            <small class="text-warning">
+                                <i class="bi bi-broadcast"></i> LIVE STATUS
+                            </small>
+                        </div>
+                        <i class="bi bi-radar text-warning fs-4 alert-pulse"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase text-muted small">
+                                <i class="bi bi-currency-dollar"></i> Revenue Stream
+                            </h6>
+                            <div class="metric-value">${{ "{:,.0f}".format(kpis.total_revenue or 0) }}</div>
+                            <small class="text-success">
+                                <i class="bi bi-graph-up-arrow"></i> PERIOD TOTAL
+                            </small>
+                        </div>
+                        <i class="bi bi-cash-stack text-success fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase text-muted small">
+                                <i class="bi bi-speedometer"></i> Fleet Utilization
+                            </h6>
+                            <div class="metric-value">{{ utilization or 0 }}%</div>
+                            <div class="progress mt-2" style="height: 4px; background: rgba(0,212,255,0.1);">
+                                <div class="progress-bar" style="width: {{ utilization or 0 }}%; background: linear-gradient(90deg, var(--theme-accent), var(--theme-success));"></div>
+                            </div>
+                        </div>
+                        <i class="bi bi-pie-chart text-primary fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intelligence Grid -->
+    <div class="row g-3">
+        <!-- Threat Detection Panel -->
+        <div class="col-lg-7">
+            <div class="card h-100">
+                <div class="card-header bg-danger bg-opacity-10 border-danger">
+                    <h5 class="mb-0 text-danger">
+                        <i class="bi bi-shield-exclamation"></i> THREAT DETECTION SYSTEM
+                        <span class="badge bg-danger float-end alert-pulse">{{ alerts|length }} ACTIVE</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if alerts %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>TYPE</th>
+                                        <th>TARGET</th>
+                                        <th>INTEL</th>
+                                        <th>SEVERITY</th>
+                                        <th>TIME</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for alert in alerts %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-dark">
+                                                {{ alert.event_type | upper | replace('_', ' ') }}
+                                            </span>
+                                        </td>
+                                        <td class="text-info">{{ alert.entity_type | upper }}</td>
+                                        <td class="small">
+                                            {% if alert.details %}
+                                                {% if alert.details.reason %}
+                                                    {{ alert.details.reason[:50] }}...
+                                                {% else %}
+                                                    {{ alert.details | string | truncate(50) }}
+                                                {% endif %}
+                                            {% else %}
+                                                Anomaly detected
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-opacity-25 severity-{{ alert.severity }} bg-{{ 'danger' if alert.severity == 'critical' else 'warning' if alert.severity == 'high' else 'info' }}">
+                                                {{ alert.severity | upper }}
+                                            </span>
+                                        </td>
+                                        <td class="small text-muted">
+                                            {{ alert.detected_at.strftime('%H:%M') }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-shield-check fs-1"></i>
+                            <p>No active threats detected</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- System Analytics -->
+        <div class="col-lg-5">
+            <div class="card h-100">
+                <div class="card-header bg-primary bg-opacity-10 border-primary">
+                    <h5 class="mb-0 text-primary">
+                        <i class="bi bi-cpu"></i> SYSTEM ANALYTICS
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="utilChart" height="250"></canvas>
+                    <div class="row mt-3 text-center">
+                        <div class="col-4">
+                            <div class="data-grid p-2">
+                                <i class="bi bi-lightning-charge text-warning"></i>
+                                <div class="small text-muted">EFFICIENCY</div>
+                                <div class="fw-bold text-info">{{ (utilization or 0) }}%</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="data-grid p-2">
+                                <i class="bi bi-thermometer-half text-danger"></i>
+                                <div class="small text-muted">RISK LEVEL</div>
+                                <div class="fw-bold text-warning">MEDIUM</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="data-grid p-2">
+                                <i class="bi bi-arrow-repeat text-success"></i>
+                                <div class="small text-muted">UPTIME</div>
+                                <div class="fw-bold text-success">99.9%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission Control -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-opacity-50">
+                <div class="card-body">
+                    <h5 class="text-uppercase small text-muted mb-3">
+                        <i class="bi bi-terminal"></i> MISSION CONTROL
+                    </h5>
+                    <div class="btn-group w-100" role="group">
+                        <a href="/analytics" class="btn btn-outline-info">
+                            <i class="bi bi-cpu"></i> DEEP ANALYTICS
+                        </a>
+                        <a href="/alerts" class="btn btn-outline-warning">
+                            <i class="bi bi-exclamation-diamond"></i> THREAT MONITOR
+                        </a>
+                        <a href="/browse" class="btn btn-outline-success">
+                            <i class="bi bi-database"></i> FLEET DATABASE
+                        </a>
+                        <a href="/api/metrics" class="btn btn-outline-primary">
+                            <i class="bi bi-cloud-download"></i> EXPORT INTEL
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Visualization Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Utilization Radar Chart
+    const ctx = document.getElementById('utilChart').getContext('2d');
+    const utilization = {{ utilization or 0 }};
+    
+    new Chart(ctx, {
+        type: 'polarArea',
+        data: {
+            labels: ['Active Fleet', 'Available', 'Maintenance', 'Reserved'],
+            datasets: [{
+                data: [utilization, 100-utilization, 10, 15],
+                backgroundColor: [
+                    'rgba(0, 212, 255, 0.6)',
+                    'rgba(0, 255, 136, 0.6)',
+                    'rgba(255, 170, 0, 0.6)',
+                    'rgba(255, 51, 102, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(0, 212, 255, 1)',
+                    'rgba(0, 255, 136, 1)',
+                    'rgba(255, 170, 0, 1)',
+                    'rgba(255, 51, 102, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(10, 14, 39, 0.9)',
+                    borderColor: '#00d4ff',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                r: {
+                    grid: {
+                        color: 'rgba(42, 63, 95, 0.3)'
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

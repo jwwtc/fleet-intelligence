@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Fleet Data Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h2 mb-1">
+                <i class="bi bi-database text-info"></i> FLEET DATABASE
+            </h1>
+            <p class="text-muted mb-0">Vehicle Inventory | Availability Status | Utilization Metrics</p>
+            <hr style="border-color: var(--theme-accent); opacity: 0.3;">
+        </div>
+    </div>
+
+    <!-- Vehicle Inventory Panel -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary bg-opacity-10 border-primary">
+                    <h5 class="mb-0 text-primary">
+                        <i class="bi bi-truck"></i> VEHICLE INVENTORY MATRIX
+                        <span class="badge bg-primary float-end">{{ vehicles|length }} UNITS</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if vehicles %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>MODEL</th>
+                                        <th>CATEGORY</th>
+                                        <th>PRICE/DAY</th>
+                                        <th>INVENTORY</th>
+                                        <th>UTILIZATION</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for vehicle in vehicles %}
+                                    <tr>
+                                        <td class="text-info fw-bold">
+                                            <i class="bi bi-car-front-fill"></i> {{ vehicle.model_name }}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary bg-opacity-50">
+                                                {{ vehicle.category_name }}
+                                            </span>
+                                        </td>
+                                        <td class="text-success fw-bold">
+                                            ${{ "%.2f"|format(vehicle.price_per_day) }}
+                                        </td>
+                                        <td>
+                                            <span class="badge {% if vehicle.current_inventory > 5 %}bg-success{% elif vehicle.current_inventory > 2 %}bg-warning{% else %}bg-danger{% endif %} bg-opacity-25">
+                                                {{ vehicle.current_inventory }} units
+                                            </span>
+                                        </td>
+                                        <td style="min-width: 200px;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 20px; background: rgba(0,0,0,0.3);">
+                                                    <div class="progress-bar {% if vehicle.utilization_rate >= 80 %}bg-danger{% elif vehicle.utilization_rate >= 60 %}bg-warning{% else %}bg-success{% endif %}"
+                                                         role="progressbar"
+                                                         style="width: {{ vehicle.utilization_rate }}%;"
+                                                         aria-valuenow="{{ vehicle.utilization_rate }}"
+                                                         aria-valuemin="0"
+                                                         aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                                <small class="text-muted">{{ "%.0f"|format(vehicle.utilization_rate) }}%</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if vehicle.current_inventory > 0 %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> AVAILABLE
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> DEPLETED
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-5 text-center text-muted">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mt-2">No vehicle data available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fleet Summary Stats -->
+    <div class="row mt-4 g-3">
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-truck fs-1 text-primary"></i>
+                    <h3 class="mt-2 text-info">{{ vehicles|length }}</h3>
+                    <p class="text-muted mb-0">Total Models</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-box-seam fs-1 text-success"></i>
+                    <h3 class="mt-2 text-info">
+                        {% set total_inventory = namespace(count=0) %}
+                        {% for vehicle in vehicles %}
+                            {% set total_inventory.count = total_inventory.count + vehicle.current_inventory %}
+                        {% endfor %}
+                        {{ total_inventory.count }}
+                    </h3>
+                    <p class="text-muted mb-0">Total Inventory</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-speedometer2 fs-1 text-warning"></i>
+                    <h3 class="mt-2 text-info">
+                        {% set avg_util = namespace(total=0) %}
+                        {% for vehicle in vehicles %}
+                            {% set avg_util.total = avg_util.total + vehicle.utilization_rate %}
+                        {% endfor %}
+                        {% if vehicles|length > 0 %}
+                            {{ "%.0f"|format(avg_util.total / vehicles|length) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Avg Utilization</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-coin fs-1 text-success"></i>
+                    <h3 class="mt-2 text-info">
+                        {% set total_value = namespace(sum=0) %}
+                        {% for vehicle in vehicles %}
+                            {% set total_value.sum = total_value.sum + (vehicle.price_per_day * vehicle.current_inventory) %}
+                        {% endfor %}
+                        ${{ "{:,.0f}".format(total_value.sum) }}
+                    </h3>
+                    <p class="text-muted mb-0">Fleet Value/Day</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
