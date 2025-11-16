@@ -91,16 +91,53 @@
 
     <!-- Intelligence Grid -->
     <div class="row g-3">
+        <!-- System Analytics -->
+        <div class="col-lg-5">
+            <div class="card" style="height: 450px;">
+                <div class="card-header bg-primary bg-opacity-10 border-primary">
+                    <h5 class="mb-0 text-primary">
+                        <i class="bi bi-cpu"></i> SYSTEM ANALYTICS
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="utilChart" height="200"></canvas>
+                    <div class="row mt-3 text-center">
+                        <div class="col-4">
+                            <div class="data-grid p-2">
+                                <i class="bi bi-lightning-charge text-warning"></i>
+                                <div class="small text-muted">EFFICIENCY</div>
+                                <div class="fw-bold text-info">{{ (utilization or 0) }}%</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="data-grid p-2">
+                                <i class="bi bi-thermometer-half text-danger"></i>
+                                <div class="small text-muted">RISK LEVEL</div>
+                                <div class="fw-bold text-warning">MEDIUM</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="data-grid p-2">
+                                <i class="bi bi-arrow-repeat text-success"></i>
+                                <div class="small text-muted">UPTIME</div>
+                                <div class="fw-bold text-success">99.9%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Threat Detection Panel -->
         <div class="col-lg-7">
-            <div class="card h-100">
+            <div class="card" style="height: 450px;">
                 <div class="card-header bg-danger bg-opacity-10 border-danger">
                     <h5 class="mb-0 text-danger">
                         <i class="bi bi-shield-exclamation"></i> THREAT DETECTION SYSTEM
                         <span class="badge bg-danger float-end alert-pulse">{{ alerts|length }} ACTIVE</span>
                     </h5>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0" style="overflow-y: auto; max-height: 390px;">
                     {% if alerts %}
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
@@ -152,43 +189,6 @@
                             <p>No active threats detected</p>
                         </div>
                     {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- System Analytics -->
-        <div class="col-lg-5">
-            <div class="card h-100">
-                <div class="card-header bg-primary bg-opacity-10 border-primary">
-                    <h5 class="mb-0 text-primary">
-                        <i class="bi bi-cpu"></i> SYSTEM ANALYTICS
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="utilChart" height="250"></canvas>
-                    <div class="row mt-3 text-center">
-                        <div class="col-4">
-                            <div class="data-grid p-2">
-                                <i class="bi bi-lightning-charge text-warning"></i>
-                                <div class="small text-muted">EFFICIENCY</div>
-                                <div class="fw-bold text-info">{{ (utilization or 0) }}%</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="data-grid p-2">
-                                <i class="bi bi-thermometer-half text-danger"></i>
-                                <div class="small text-muted">RISK LEVEL</div>
-                                <div class="fw-bold text-warning">MEDIUM</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="data-grid p-2">
-                                <i class="bi bi-arrow-repeat text-success"></i>
-                                <div class="small text-muted">UPTIME</div>
-                                <div class="fw-bold text-success">99.9%</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
