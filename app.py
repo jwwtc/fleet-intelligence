@@ -186,4 +186,9 @@ def api_metrics():
     return jsonify(metrics)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    # Use environment variable for debug mode (False in production)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    # Bind to 0.0.0.0 for cloud deployment, port from environment or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
