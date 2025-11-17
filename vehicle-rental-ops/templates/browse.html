@@ -28,7 +28,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>
-                                    <tr class="text-muted small">
+                                    <tr class="text-muted" style="font-size: 12px;">
                                         <th>MODEL</th>
                                         <th>CATEGORY</th>
                                         <th>PRICE/DAY</th>
@@ -39,7 +39,7 @@
                                 </thead>
                                 <tbody>
                                     {% for vehicle in vehicles %}
-                                    <tr>
+                                    <tr style="font-size: 14px;">
                                         <td class="text-info fw-bold">
                                             <i class="bi bi-car-front-fill"></i> {{ vehicle.model_name }}
                                         </td>
@@ -67,7 +67,7 @@
                                                          aria-valuemax="100">
                                                     </div>
                                                 </div>
-                                                <small class="text-muted">{{ "%.0f"|format(vehicle.utilization_rate) }}%</small>
+                                                <span class="text-muted" style="font-size: 13px;">{{ "%.0f"|format(vehicle.utilization_rate) }}%</span>
                                             </div>
                                         </td>
                                         <td>

@@ -23,10 +23,23 @@ def dashboard():
     """)
     kpis = cur.fetchone()
     
-    # Get critical alerts
+    # Get critical alerts with entity details
     cur.execute("""
-        SELECT event_type, entity_type, severity, detected_at, details
-        FROM operational_events
+        SELECT
+            oe.event_type,
+            oe.entity_type,
+            oe.entity_id,
+            oe.severity,
+            oe.detected_at,
+            oe.details,
+            CASE
+                WHEN oe.entity_type = 'vehicle' THEN (SELECT model_name FROM vehicles WHERE vehicle_id = oe.entity_id)
+                WHEN oe.entity_type = 'customer' THEN (SELECT name FROM customers WHERE customer_id = oe.entity_id)
+                WHEN oe.entity_type = 'store' THEN (SELECT store_name FROM stores WHERE store_id = oe.entity_id)
+                WHEN oe.entity_type = 'transaction' THEN CONCAT('Transaction #', oe.entity_id)
+                ELSE CONCAT(oe.entity_type, ' #', oe.entity_id)
+            END as entity_name
+        FROM operational_events oe
         WHERE resolved = FALSE AND severity IN ('high', 'critical')
         ORDER BY detected_at DESC
         LIMIT 5
@@ -54,54 +67,56 @@ def dashboard():
 def analytics():
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
     # Fraud detection
     cur.execute("""
-        SELECT c.name, c.email, COUNT(t.transaction_id) as rental_count,
+        SELECT c.customer_id, c.name, c.email, c.phone,
+               COUNT(t.transaction_id) as rental_count,
                SUM(t.total_amount) as total_spent,
-               ROUND(AVG(t.total_amount), 2) as avg_transaction
+               ROUND(AVG(t.total_amount)::numeric, 2) as avg_transaction
         FROM customers c
         JOIN transactions t ON c.customer_id = t.customer_id
         WHERE t.rental_date >= CURRENT_DATE - INTERVAL '30 days'
-        GROUP BY c.customer_id, c.name, c.email
+        GROUP BY c.customer_id, c.name, c.email, c.phone
         HAVING COUNT(t.transaction_id) > 2 OR AVG(t.total_amount) > 500
         ORDER BY avg_transaction DESC
     """)
     suspicious_customers = cur.fetchall()
-    
+
     # Revenue optimization opportunities
     cur.execute("""
         SELECT v.model_name, v.price_per_day,
                COUNT(t.transaction_id) as rental_count,
                ROUND(AVG(t.total_amount / NULLIF(
-                   DATE_PART('day', t.return_date - t.rental_date), 0)), 2) as actual_daily_rate,
+                   EXTRACT(day FROM t.return_date::timestamp - t.rental_date::timestamp), 0))::numeric, 2) as actual_daily_rate,
                ROUND((AVG(t.total_amount / NULLIF(
-                   DATE_PART('day', t.return_date - t.rental_date), 0)) - v.price_per_day) * 30, 2) as monthly_opportunity
+                   EXTRACT(day FROM t.return_date::timestamp - t.rental_date::timestamp), 0)) - v.price_per_day) * 30, 2) as monthly_opportunity
         FROM vehicles v
         JOIN transactions t ON v.vehicle_id = t.vehicle_id
-        WHERE t.status = 'completed'
+        WHERE t.status = 'completed' AND t.return_date IS NOT NULL
         GROUP BY v.vehicle_id, v.model_name, v.price_per_day
-        HAVING AVG(t.total_amount / NULLIF(DATE_PART('day', t.return_date - t.rental_date), 0)) > v.price_per_day * 1.1
+        HAVING AVG(t.total_amount / NULLIF(EXTRACT(day FROM t.return_date::timestamp - t.rental_date::timestamp), 0)) > v.price_per_day * 1.1
     """)
     revenue_opportunities = cur.fetchall()
-    
+
     # Maintenance priorities
     cur.execute("""
-        SELECT model_name, last_rental_date,
+        SELECT vehicle_id, model_name, last_rental_date,
                CURRENT_DATE - last_rental_date as days_idle
         FROM vehicles
         WHERE last_rental_date < CURRENT_DATE - INTERVAL '30 days'
            OR last_rental_date IS NULL
         ORDER BY last_rental_date NULLS FIRST
+        LIMIT 10
     """)
     maintenance_needed = cur.fetchall()
     
     cur.close()
     conn.close()
-    
+
     return render_template('analytics.html',
-                         suspicious=suspicious_customers,
-                         opportunities=revenue_opportunities,
+                         suspicious_customers=suspicious_customers,
+                         revenue_opportunities=revenue_opportunities,
                          maintenance=maintenance_needed)
 
 # Vehicle Browse
@@ -111,9 +126,9 @@ def browse():
     cur = conn.cursor()
     
     cur.execute("""
-        SELECT v.vehicle_id, v.model_name, c.category_name, 
+        SELECT v.vehicle_id, v.model_name, c.category_name,
                v.price_per_day, v.current_inventory,
-               ROUND((1.0 - v.current_inventory::float / v.total_inventory) * 100, 1) as utilization_rate
+               ROUND(((1.0 - v.current_inventory::numeric / v.total_inventory) * 100)::numeric, 1) as utilization_rate
         FROM vehicles v
         JOIN categories c ON v.category_id = c.category_id
         ORDER BY utilization_rate DESC
@@ -130,9 +145,18 @@ def browse():
 def alerts():
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
     cur.execute("""
-        SELECT * FROM operational_events
+        SELECT
+            oe.*,
+            CASE
+                WHEN oe.entity_type = 'vehicle' THEN (SELECT model_name FROM vehicles WHERE vehicle_id = oe.entity_id)
+                WHEN oe.entity_type = 'customer' THEN (SELECT name FROM customers WHERE customer_id = oe.entity_id)
+                WHEN oe.entity_type = 'store' THEN (SELECT store_name FROM stores WHERE store_id = oe.entity_id)
+                WHEN oe.entity_type = 'transaction' THEN CONCAT('Transaction #', oe.entity_id)
+                ELSE CONCAT(oe.entity_type, ' #', oe.entity_id)
+            END as entity_name
+        FROM operational_events oe
         ORDER BY detected_at DESC
     """)
     events = cur.fetchall()

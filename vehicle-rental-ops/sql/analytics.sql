@@ -1,2 +1,0 @@
--- Analytics queries are integrated directly into app.py
--- This file reserved for ad-hoc analysis and testing

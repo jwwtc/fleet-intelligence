@@ -3,15 +3,15 @@
 -- Includes: fraud patterns, maintenance issues, demand surges
 
 -- Clear existing data (in reverse order of foreign key dependencies)
-TRUNCATE TABLE performance_metrics CASCADE;
-TRUNCATE TABLE operational_events CASCADE;
-TRUNCATE TABLE transactions CASCADE;
-TRUNCATE TABLE salespersons CASCADE;
-TRUNCATE TABLE customers CASCADE;
-TRUNCATE TABLE vehicles CASCADE;
-TRUNCATE TABLE categories CASCADE;
-TRUNCATE TABLE stores CASCADE;
-TRUNCATE TABLE regions CASCADE;
+TRUNCATE TABLE performance_metrics RESTART IDENTITY CASCADE;
+TRUNCATE TABLE operational_events RESTART IDENTITY CASCADE;
+TRUNCATE TABLE transactions RESTART IDENTITY CASCADE;
+TRUNCATE TABLE salespersons RESTART IDENTITY CASCADE;
+TRUNCATE TABLE customers RESTART IDENTITY CASCADE;
+TRUNCATE TABLE vehicles RESTART IDENTITY CASCADE;
+TRUNCATE TABLE categories RESTART IDENTITY CASCADE;
+TRUNCATE TABLE stores RESTART IDENTITY CASCADE;
+TRUNCATE TABLE regions RESTART IDENTITY CASCADE;
 
 -- =============================================
 -- Basic Setup Data

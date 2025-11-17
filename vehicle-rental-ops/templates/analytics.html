@@ -28,7 +28,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>
-                                    <tr class="text-muted small">
+                                    <tr class="text-muted" style="font-size: 12px;">
                                         <th>CUSTOMER ID</th>
                                         <th>NAME</th>
                                         <th>EMAIL</th>
@@ -39,14 +39,14 @@
                                 </thead>
                                 <tbody>
                                     {% for customer in suspicious_customers %}
-                                    <tr>
+                                    <tr style="font-size: 14px;">
                                         <td class="text-info fw-bold">{{ customer.customer_id }}</td>
-                                        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                        <td>{{ customer.name }}</td>
                                         <td class="small"><i class="bi bi-envelope"></i> {{ customer.email }}</td>
                                         <td class="small"><i class="bi bi-telephone"></i> {{ customer.phone }}</td>
                                         <td>
                                             <span class="badge bg-warning bg-opacity-25 text-warning">
-                                                High Risk Pattern
+                                                {{ customer.rental_count }} rentals | ${{ "%.2f"|format(customer.avg_transaction) }} avg
                                             </span>
                                         </td>
                                         <td>
@@ -86,28 +86,30 @@
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>
-                                    <tr class="text-muted small">
-                                        <th>OPPORTUNITY</th>
+                                    <tr class="text-muted" style="font-size: 12px;">
                                         <th>VEHICLE</th>
-                                        <th>CURRENT PRICE</th>
-                                        <th>SUGGESTED PRICE</th>
-                                        <th>POTENTIAL GAIN</th>
+                                        <th>RENTALS</th>
+                                        <th>BASE PRICE</th>
+                                        <th>ACTUAL RATE</th>
+                                        <th>MONTHLY OPPORTUNITY</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for opp in revenue_opportunities %}
-                                    <tr>
+                                    <tr style="font-size: 14px;">
+                                        <td class="text-info">
+                                            <i class="bi bi-truck"></i> {{ opp.model_name }}
+                                        </td>
                                         <td>
-                                            <span class="badge bg-success bg-opacity-25 text-success">
-                                                {{ opp.opportunity_type or 'OPTIMIZE' }}
+                                            <span class="badge bg-info bg-opacity-25">
+                                                {{ opp.rental_count }} rentals
                                             </span>
                                         </td>
-                                        <td class="text-info">{{ opp.model_name }}</td>
-                                        <td>${{ "%.2f"|format(opp.current_price) }}</td>
-                                        <td class="text-success fw-bold">${{ "%.2f"|format(opp.suggested_price) }}</td>
+                                        <td>${{ "%.2f"|format(opp.price_per_day) }}</td>
+                                        <td class="text-success fw-bold">${{ "%.2f"|format(opp.actual_daily_rate) }}</td>
                                         <td>
                                             <span class="badge bg-success">
-                                                +${{ "%.0f"|format(opp.potential_revenue) }}
+                                                +${{ "%.2f"|format(opp.monthly_opportunity) }}/mo
                                             </span>
                                         </td>
                                     </tr>
@@ -139,31 +141,39 @@
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>
-                                    <tr class="text-muted small">
-                                        <th>VEHICLE</th>
-                                        <th>VIN</th>
-                                        <th>ISSUE</th>
-                                        <th>PRIORITY</th>
-                                        <th>ACTIONS</th>
+                                    <tr class="text-muted" style="font-size: 12px;">
+                                        <th>VEHICLE ID</th>
+                                        <th>MODEL</th>
+                                        <th>LAST RENTAL</th>
+                                        <th>DAYS IDLE</th>
+                                        <th>STATUS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for vehicle in maintenance %}
-                                    <tr>
-                                        <td class="text-info">
+                                    <tr style="font-size: 14px;">
+                                        <td class="text-info fw-bold">
+                                            #{{ vehicle.vehicle_id }}
+                                        </td>
+                                        <td>
                                             <i class="bi bi-truck"></i> {{ vehicle.model_name }}
                                         </td>
-                                        <td class="small text-muted">{{ vehicle.vin }}</td>
-                                        <td class="small">Scheduled maintenance required</td>
+                                        <td class="small text-muted">
+                                            {% if vehicle.last_rental_date %}
+                                                {{ vehicle.last_rental_date.strftime('%Y-%m-%d') }}
+                                            {% else %}
+                                                Never rented
+                                            {% endif %}
+                                        </td>
                                         <td>
-                                            <span class="badge bg-warning bg-opacity-25 text-warning">
-                                                HIGH
+                                            <span class="badge {% if vehicle.days_idle > 60 %}bg-danger{% elif vehicle.days_idle > 30 %}bg-warning{% else %}bg-info{% endif %} bg-opacity-25">
+                                                {{ vehicle.days_idle or 'N/A' }} days
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-outline-warning">
-                                                <i class="bi bi-calendar-check"></i> SCHEDULE
-                                            </button>
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-tools"></i> MAINTENANCE DUE
+                                            </span>
                                         </td>
                                     </tr>
                                     {% endfor %}

@@ -102,11 +102,11 @@
                 <div class="card-body">
                     <!-- Fleet Status -->
                     <div class="mb-4">
-                        <h6 class="text-muted small mb-3">FLEET STATUS</h6>
+                        <h6 class="text-muted mb-3" style="font-size: 13px; font-weight: 500; letter-spacing: 0.05em;">FLEET STATUS</h6>
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span class="small">Active Fleet</span>
-                                <span class="small text-info fw-bold">{{ utilization or 0 }}%</span>
+                                <span style="font-size: 14px;">Active Fleet</span>
+                                <span class="text-info fw-bold" style="font-size: 14px;">{{ utilization or 0 }}%</span>
                             </div>
                             <div class="progress" style="height: 8px; background: rgba(42, 63, 95, 0.3);">
                                 <div class="progress-bar" style="width: {{ utilization or 0 }}%; background: #6b7c93;"></div>
@@ -114,8 +114,8 @@
                         </div>
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span class="small">Available</span>
-                                <span class="small text-success fw-bold">{{ 100 - (utilization or 0) }}%</span>
+                                <span style="font-size: 14px;">Available</span>
+                                <span class="text-success fw-bold" style="font-size: 14px;">{{ 100 - (utilization or 0) }}%</span>
                             </div>
                             <div class="progress" style="height: 8px; background: rgba(42, 63, 95, 0.3);">
                                 <div class="progress-bar" style="width: {{ 100 - (utilization or 0) }}%; background: #6b8e7f;"></div>
@@ -123,8 +123,8 @@
                         </div>
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span class="small">Maintenance</span>
-                                <span class="small text-warning fw-bold">8%</span>
+                                <span style="font-size: 14px;">Maintenance</span>
+                                <span class="text-warning fw-bold" style="font-size: 14px;">8%</span>
                             </div>
                             <div class="progress" style="height: 8px; background: rgba(42, 63, 95, 0.3);">
                                 <div class="progress-bar" style="width: 8%; background: #b8936f;"></div>
@@ -132,8 +132,8 @@
                         </div>
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span class="small">Reserved</span>
-                                <span class="small text-danger fw-bold">12%</span>
+                                <span style="font-size: 14px;">Reserved</span>
+                                <span class="text-danger fw-bold" style="font-size: 14px;">12%</span>
                             </div>
                             <div class="progress" style="height: 8px; background: rgba(42, 63, 95, 0.3);">
                                 <div class="progress-bar" style="width: 12%; background: #c55d6f;"></div>
@@ -183,29 +183,38 @@
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>
-                                    <tr class="text-muted small">
+                                    <tr class="text-muted" style="font-size: 12px;">
                                         <th>TYPE</th>
                                         <th>TARGET</th>
-                                        <th>INTEL</th>
+                                        <th>DESCRIPTION</th>
                                         <th>SEVERITY</th>
                                         <th>TIME</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for alert in alerts %}
-                                    <tr>
+                                    <tr style="font-size: 14px;">
                                         <td>
                                             <span class="badge bg-dark">
                                                 {{ alert.event_type | upper | replace('_', ' ') }}
                                             </span>
                                         </td>
-                                        <td class="text-info">{{ alert.entity_type | upper }}</td>
+                                        <td class="text-info">
+                                            <div>{{ alert.entity_name }}</div>
+                                            <small class="text-muted">{{ alert.entity_type | upper }}</small>
+                                        </td>
                                         <td class="small">
                                             {% if alert.details %}
                                                 {% if alert.details.reason %}
-                                                    {{ alert.details.reason[:50] }}...
+                                                    {{ alert.details.reason }}
+                                                {% elif alert.details.category %}
+                                                    {{ alert.details.category }} category - {{ alert.details.available or 0 }} available, demand: {{ alert.details.demand or 'N/A' }}
+                                                {% elif alert.details.utilization %}
+                                                    Utilization at {{ (alert.details.utilization * 100)|round }}% - {{ alert.details.available_vehicles or 0 }} vehicles available
+                                                {% elif alert.details.type %}
+                                                    {{ alert.details.type|replace('_', ' ')|title }} detected
                                                 {% else %}
-                                                    {{ alert.details | string | truncate(50) }}
+                                                    Event detected - monitoring in progress
                                                 {% endif %}
                                             {% else %}
                                                 Anomaly detected

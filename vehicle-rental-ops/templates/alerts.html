@@ -77,7 +77,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>
-                                    <tr class="text-muted small">
+                                    <tr class="text-muted" style="font-size: 12px;">
                                         <th>EVENT TYPE</th>
                                         <th>ENTITY</th>
                                         <th>SEVERITY</th>
@@ -88,7 +88,7 @@
                                 </thead>
                                 <tbody>
                                     {% for event in events %}
-                                    <tr>
+                                    <tr style="font-size: 14px;">
                                         <td>
                                             <span class="badge bg-dark">
                                                 <i class="bi bi-lightning-charge"></i>
@@ -96,8 +96,11 @@
                                             </span>
                                         </td>
                                         <td class="text-info">
-                                            <i class="bi {% if event.entity_type == 'vehicle' %}bi-truck{% elif event.entity_type == 'customer' %}bi-person{% elif event.entity_type == 'rental' %}bi-file-text{% else %}bi-box{% endif %}"></i>
-                                            {{ event.entity_type|upper }}
+                                            <div>
+                                                <i class="bi {% if event.entity_type == 'vehicle' %}bi-truck{% elif event.entity_type == 'customer' %}bi-person{% elif event.entity_type == 'rental' %}bi-file-text{% else %}bi-box{% endif %}"></i>
+                                                {{ event.entity_name }}
+                                            </div>
+                                            <small class="text-muted">{{ event.entity_type|upper }}</small>
                                         </td>
                                         <td>
                                             {% if event.severity == 'critical' %}
@@ -120,14 +123,16 @@
                                         </td>
                                         <td class="small">
                                             {% if event.details %}
-                                                {% if event.details is mapping %}
-                                                    {% if event.details.reason %}
-                                                        {{ event.details.reason[:60] }}{% if event.details.reason|length > 60 %}...{% endif %}
-                                                    {% else %}
-                                                        {{ event.details|string|truncate(60) }}
-                                                    {% endif %}
+                                                {% if event.details.reason %}
+                                                    {{ event.details.reason }}
+                                                {% elif event.details.category %}
+                                                    {{ event.details.category }} category - {{ event.details.available or 0 }} available, demand: {{ event.details.demand or 'N/A' }}
+                                                {% elif event.details.utilization %}
+                                                    Utilization at {{ (event.details.utilization * 100)|round }}% - {{ event.details.available_vehicles or 0 }} vehicles available
+                                                {% elif event.details.type %}
+                                                    {{ event.details.type|replace('_', ' ')|title }} detected
                                                 {% else %}
-                                                    {{ event.details|string|truncate(60) }}
+                                                    Event detected - monitoring in progress
                                                 {% endif %}
                                             {% else %}
                                                 <span class="text-muted">No details available</span>
