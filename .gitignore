@@ -5,6 +5,7 @@ __pycache__/
 *.so
 .Python
 build/
+_Report/
 develop-eggs/
 dist/
 downloads/
@@ -40,7 +41,10 @@ instance/
 *.swp
 *.swo
 *~
+
+# macOS
 .DS_Store
+**/.DS_Store
 
 # Logs
 *.log

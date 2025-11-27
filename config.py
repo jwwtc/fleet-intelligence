@@ -5,10 +5,10 @@ import os
 class Config:
     # For local development
     DATABASE = {
-        'dbname': 'vehicle_rental_db',
-        'user': 'paleosmichael',
-        'host': 'localhost',
-        'port': 5432
+        'dbname': os.environ.get('DB_NAME', 'vehicle_rental_db'),
+        'user': os.environ.get('DB_USER', 'postgres'),
+        'host': os.environ.get('DB_HOST', 'localhost'),
+        'port': int(os.environ.get('DB_PORT', '5432'))
     }
 
 def get_db_connection():
