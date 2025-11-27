@@ -2,6 +2,8 @@
 
 A real-time operational intelligence system for vehicle rental fleet management, featuring anomaly detection, predictive analytics, and business intelligence capabilities.
 
+**🚀 Live Demo:** https://fleet-intelligence.onrender.com/
+
 ## Overview
 
 This platform provides enterprise-grade fleet operations monitoring with automated anomaly detection, revenue optimization insights, and operational event tracking. Built with PostgreSQL and Flask, it demonstrates advanced database design, complex analytical queries, and data-driven decision support.
@@ -137,6 +139,8 @@ python app.py
 ```
 
 Access the platform at `http://localhost:5000`
+
+**Or view the live deployment:** https://fleet-intelligence.onrender.com/
 
 ## Application Pages
 
