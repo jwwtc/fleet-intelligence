@@ -2,7 +2,7 @@
 
 A real-time operational intelligence system for vehicle rental fleet management, featuring anomaly detection, predictive analytics, and business intelligence capabilities.
 
-** Live Demo:** https://fleet-intelligence.onrender.com/
+#### Live Demo: https://fleet-intelligence.onrender.com/
 
 ## Overview
 
