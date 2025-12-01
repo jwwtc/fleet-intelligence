@@ -53,3 +53,6 @@ logs/
 # Database
 *.sql.backup
 *.dump
+
+# Python version
+.python-version
