@@ -77,19 +77,19 @@ INSERT INTO vehicles (model_name, category_id, price_per_day, current_inventory,
 -- Customers (mix of regular, VIP, and suspicious patterns)
 INSERT INTO customers (name, email, phone, address_line, city, state, zip, customer_type, registration_date, total_spent) VALUES
 -- Regular customers
-('Robert Johnson', 'rjohnson@email.com', '555-0101', '123 Main St', 'New York', 'NY', '10001', 'individual', '2024-01-15', 1250.50),
-('Jennifer Davis', 'jdavis@email.com', '555-0102', '456 Oak Ave', 'Boston', 'MA', '02109', 'individual', '2024-02-20', 890.25),
-('Michael Brown', 'mbrown@email.com', '555-0103', '789 Pine St', 'Chicago', 'IL', '60601', 'individual', '2024-03-10', 2100.00),
--- Business customers  
-('TechCorp Solutions', 'fleet@techcorp.com', '555-0200', '100 Tech Blvd', 'San Francisco', 'CA', '94105', 'business', '2024-01-01', 15670.00),
-('Global Consulting Inc', 'rentals@globalconsult.com', '555-0201', '200 Business Park', 'Atlanta', 'GA', '30320', 'business', '2024-02-01', 8900.50),
-('StartUp Ventures', 'cars@startup.com', '555-0202', '300 Innovation Dr', 'Miami', 'FL', '33139', 'business', '2024-06-01', 3200.00),
+('Robert Johnson', 'rjohnson@email.com', '212-555-0101', '123 Main St', 'New York', 'NY', '10001', 'individual', '2024-01-15', 1250.50),
+('Jennifer Davis', 'jdavis@email.com', '617-555-0102', '456 Oak Ave', 'Boston', 'MA', '02109', 'individual', '2024-02-20', 890.25),
+('Michael Brown', 'mbrown@email.com', '312-555-0103', '789 Pine St', 'Chicago', 'IL', '60601', 'individual', '2024-03-10', 2100.00),
+-- Business customers
+('TechCorp Solutions', 'fleet@techcorp.com', '415-555-0200', '100 Tech Blvd', 'San Francisco', 'CA', '94105', 'business', '2024-01-01', 15670.00),
+('Global Consulting Inc', 'rentals@globalconsult.com', '404-555-0201', '200 Business Park', 'Atlanta', 'GA', '30320', 'business', '2024-02-01', 8900.50),
+('StartUp Ventures', 'cars@startup.com', '305-555-0202', '300 Innovation Dr', 'Miami', 'FL', '33139', 'business', '2024-06-01', 3200.00),
 -- Suspicious customers (for fraud detection)
-('John Smith', 'temp123@tempmail.com', '555-9999', '999 Fake St', 'Los Angeles', 'CA', '90001', 'individual', '2024-11-01', 50.00),
-('Quick Rentals LLC', 'quickrent@disposable.com', '555-8888', 'PO Box 1234', 'Phoenix', 'AZ', '85001', 'business', '2024-11-10', 0.00),
+('John Smith', 'temp123@tempmail.com', '213-555-9999', '999 Fake St', 'Los Angeles', 'CA', '90001', 'individual', '2024-11-01', 50.00),
+('Quick Rentals LLC', 'quickrent@disposable.com', '602-555-8888', 'PO Box 1234', 'Phoenix', 'AZ', '85001', 'business', '2024-11-10', 0.00),
 -- VIP customers
-('Elizabeth Taylor', 'etaylor@email.com', '555-0301', '1 Luxury Lane', 'Miami', 'FL', '33139', 'individual', '2023-06-15', 25000.00),
-('Premier Corp', 'vip@premier.com', '555-0302', '500 Executive Plaza', 'New York', 'NY', '10001', 'business', '2023-01-01', 45000.00);
+('Elizabeth Taylor', 'etaylor@email.com', '305-555-0301', '1 Luxury Lane', 'Miami', 'FL', '33139', 'individual', '2023-06-15', 25000.00),
+('Premier Corp', 'vip@premier.com', '212-555-0302', '500 Executive Plaza', 'New York', 'NY', '10001', 'business', '2023-01-01', 45000.00);
 
 -- Salespersons
 INSERT INTO salespersons (name, email, store_id, hire_date, total_sales) VALUES
